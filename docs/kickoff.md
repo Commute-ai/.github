@@ -3,9 +3,10 @@
 ## What needs to be done
 
 - [x] Return the kawasaki presentation in moodle.
+  - Zijad
 - [x] Register the group in moodle.
 - [x] Return a diary of the first week in moodle.
-  - Zijad
+  - Antti
 - [x] Init a github repository for the project.
   - Multi-repo
 - [x] Go thru the schedule and milestones.
