@@ -2,16 +2,16 @@
 
 ## Repository Structure
 
-**Organization:** `commute.ai` [](https://github.com/Commute-ai)
+**Organization:** [Commute-ai](https://github.com/Commute-ai)
 
 **Code Repositories:**
 
-- `ui` - React Native mobile app [](https://github.com/Commute-ai/ui)
-- `backend` - Python FastAPI server [](https://github.com/Commute-ai/backend)
-- `ai-agents` - AI agent implementations [](https://github.com/Commute-ai/ai-agents)
-- `commute.ai` - Documentation and **all issues/project management** [](https://github.com/Commute-ai/commute.ai)
+- `ui` - React Native mobile app [Commute-ai/ui](https://github.com/Commute-ai/ui)
+- `backend` - Python FastAPI server [Commute-ai/backend](https://github.com/Commute-ai/backend)
+- `ai-agents` - AI agent implementations [Commute-ai/ai-agents](https://github.com/Commute-ai/ai-agents)
+- `commute.ai` - Documentation and **all issues/project management** [Commute-ai/commute.ai](https://github.com/Commute-ai/commute.ai)
 
-**GitHub Project:** Single org-level board tracking all work: [](https://github.com/orgs/Commute-ai/projects/1)
+**GitHub Project:** Single org-level board tracking all work: [Commute-ai/projects/1](https://github.com/orgs/Commute-ai/projects/1)
 
 ## Issue Types
 
@@ -22,7 +22,7 @@
 - Contains acceptance criteria
 - Links to subtasks as checklist in description
 - Created by: Any team member
-- Example: [](https://github.com/Commute-ai/commute.ai/issues/5)
+- Example: [As a user, I want to login and see that I am logged in, so I can save my preferences](https://github.com/Commute-ai/commute.ai/issues/5)
 
 ### Subtasks (Type: `Subtask`)
 
@@ -30,7 +30,7 @@
 - Links to parent
 - Assigned to: Developer who will complete it
 - Created by: Any team member
-- Example: [](https://github.com/Commute-ai/commute.ai/issues/12)
+- Example: [Initialize the backend project with basic FastAPI setup](https://github.com/Commute-ai/commute.ai/issues/12)
 
 ## Sprint Workflow
 
@@ -87,13 +87,13 @@
 
 ## Milestones
 
-Weekly milestones track sprint scope: [](https://github.com/Commute-ai/commute.ai/milestones)
+Weekly milestones track sprint scope: [commute.ai/milestones](https://github.com/Commute-ai/commute.ai/milestones)
 
 ## Communication
 
 - **GitHub Issues:** Technical discussion, progress updates
 - **Monday Meetings:** Planning, retrospectives, decisions
-- **Discord:** Quick questions, daily coordination: [](https://discord.gg/75WP9k3Xum)
+- **Discord:** Quick questions, daily coordination: [Commute.ai - Discord invite](https://discord.gg/75WP9k3Xum)
 
 ## Example Flow
 
@@ -121,4 +121,4 @@ Alice & Bob:
 
 ---
 
-**All issues live in `commute.ai` repo [](https://github.com/Commute-ai/commute.ai). Use component labels to indicate which codebase they affect.**
+**All issues live in `commute.ai` repo [Commute-ai/commute.ai](https://github.com/Commute-ai/commute.ai). Use component labels to indicate which codebase they affect.**
