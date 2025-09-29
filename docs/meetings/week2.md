@@ -9,6 +9,7 @@
 - [] Duplicate subtasks
 - [] Create user stories that should be done before another user story (dependencies)
 - [] Shoud we have subtasks per repo or can we have another component label?
+    - [] No more milestones!
 - [] Talk about the app for demos
 - [] Introduce hosting in Coolify
 - [] Invite people to the Expo Organization
