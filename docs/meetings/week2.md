@@ -11,3 +11,4 @@
 - [] Shoud we have subtasks per repo or can we have another component label?
 - [] Talk about the app for demos
 - [] Introduce hosting in Coolify
+- [] Invite people to the Expo Organization
