@@ -47,11 +47,6 @@ jobs:
                                 login
                               }
                             }
-                            labels(first: 10) {
-                              nodes {
-                                name
-                              }
-                            }
                             subIssues(first: 50) {
                               nodes {
                                 id
@@ -109,22 +104,16 @@ jobs:
               const project = data.organization.projectV2;
               const allItems = project.items.nodes;
               
-              // Filter for Feature type issues
+              // Filter for Feature type issues (Type field = Feature)
               const featureIssues = allItems.filter(item => {
-                if (!item.content?.labels) return false;
+                if (!item.content) return false;
                 
-                // Check if it has Feature label
-                const hasFeatureLabel = item.content.labels.nodes.some(
-                  label => label.name === 'Feature'
-                );
-                
-                // Alternative: check Type field if using project fields
+                // Check Type field for Feature value
                 const typeField = item.fieldValues.nodes.find(
                   fv => fv.field?.name === 'Type' && fv.name
                 );
-                const isFeatureType = typeField?.name === 'Feature';
                 
-                return hasFeatureLabel || isFeatureType;
+                return typeField?.name === 'Feature';
               });
               
               console.log(`📋 Found ${featureIssues.length} Feature issues`);
