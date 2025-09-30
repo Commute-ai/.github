@@ -64,20 +64,45 @@
 - `Docs` - Documentation
 - `Chore` - Quick task not fitting above
 
-**Component:**
+## Branching Strategy
 
-- `ui` - React Native work
-- `backend` - FastAPI work
-- `ai-agents` - AI work
-- `infra` - DevOps/tooling
+**Branch Structure:**
+
+- `development` - Active development branch for next release
+  - All feature work and subtasks merge here
+  - Automatically deploys to **staging environment**
+  - Where we develop throughout the week
+  
+- `main` - Production branch
+  - Stable, production-ready code
+  - Automatically deploys to **production environment**
+  - Updated weekly after sprint completion
+
+**Weekly Release Process:**
+
+1. **End of Sprint (Monday):**
+   - Review and test `development` branch in staging
+   - Merge `development` → `main`
+   - Create release tag in `main` (e.g., `v0.2.0`)
+   - Production deployment triggered automatically
+
+2. **Start of Sprint:**
+   - Continue developing on `development` branch
+   - New features merge to `development`
+
+**CI/CD Pipeline:**
+
+- Push to `development` → Auto-deploy to **staging**
+- Push to `main` → Auto-deploy to **production**
+- OTA updates published automatically for mobile app
 
 ## Pull Requests
 
 - Title describes the change
 - Include "Closes #N" to auto-close subtask
+- **Target branch:** `development` (not `main`)
 - Request review from teammate
 - Merge when approved
-- Developer decides on branching strategy
 
 ## Weekly Subtask Board
 
@@ -116,14 +141,25 @@ Subtasks in code repos do not use milestones - they link to their parent user st
 
 ```
 Alice & Bob:
+- Create feature branches from development
 - Move issues to "In Progress" on project board
 - Develop and commit code
-- Create PRs with "Closes #5" / "Closes #6"
+- Create PRs targeting development branch with "Closes #5" / "Closes #6"
 - Review each other's work
-- Merge when approved
-- User story auto-completes when all subtasks done
+- Merge to development when approved
+- Changes auto-deploy to staging environment
+```
+
+**End of Sprint (Next Monday):**
+
+```
+1. Test development branch in staging
+2. Merge development → main
+3. Create release tag (e.g., v0.2.0)
+4. Auto-deploy to production
+5. User story auto-completes when all subtasks done
 ```
 
 ---
 
-**User stories live in `.github` repo [Commute-ai/.github](https://github.com/Commute-ai/.github). Subtasks live in their specific code repositories (`ui`, `backend`, `ai-agents`). Use component labels to indicate which codebase user stories affect.**
+**User stories live in `.github` repo [Commute-ai/.github](https://github.com/Commute-ai/.github). Subtasks live in their specific code repositories (`ui`, `backend`, `ai-agents`).**
