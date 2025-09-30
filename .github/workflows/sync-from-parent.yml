@@ -3,7 +3,7 @@ name: Sync Week Field from Features to Subtasks
 on:
   workflow_dispatch:  # Manual trigger
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes
+    - cron: "*/30 * * * *"   # every 15 minutes
 
 permissions:
   issues: write
@@ -24,12 +24,38 @@ jobs:
             
             console.log('Starting sync of Week field from features to subtasks');
             
-            // 1. Query the project to get all items with their Week field values
+            // 1. Query the project to get all items with their field values
             const projectQuery = `
               query($org: String!, $projNum: Int!) {
                 organization(login: $org) {
                   projectV2(number: $projNum) {
                     id
+                    fields(first: 20) {
+                      nodes {
+                        ... on ProjectV2FieldCommon {
+                          id
+                          name
+                        }
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options {
+                            id
+                            name
+                          }
+                        }
+                        ... on ProjectV2IterationField {
+                          id
+                          name
+                          configuration {
+                            iterations {
+                              id
+                              title
+                            }
+                          }
+                        }
+                      }
+                    }
                     items(first: 100) {
                       nodes {
                         id
@@ -44,15 +70,19 @@ jobs:
                                 login
                               }
                             }
-                            labels(first: 10) {
-                              nodes {
-                                name
-                              }
-                            }
                           }
                         }
                         fieldValues(first: 20) {
                           nodes {
+                            ... on ProjectV2ItemFieldSingleSelectValue {
+                              name
+                              field {
+                                ... on ProjectV2SingleSelectField {
+                                  id
+                                  name
+                                }
+                              }
+                            }
                             ... on ProjectV2ItemFieldIterationValue {
                               title
                               iterationId
@@ -83,7 +113,7 @@ jobs:
             
             console.log(`Found ${allItems.length} items in project`);
             
-            // 2. Find feature issues in .github repo
+            // 2. Find feature issues in .github repo (Type = Feature)
             const featureIssues = allItems.filter(item => {
               // Check if it's an issue in .github repo
               if (
@@ -94,12 +124,12 @@ jobs:
                 return false;
               }
               
-              // Check if it has the 'Feature' label
-              const hasFeatureLabel = item.content.labels?.nodes?.some(
-                label => label.name.toLowerCase() === 'feature'
+              // Check if it has Type field set to "Feature"
+              const typeField = item.fieldValues.nodes.find(
+                fv => fv.field?.name === 'Type' && fv.name?.toLowerCase() === 'feature'
               );
               
-              return hasFeatureLabel;
+              return !!typeField;
             });
             
             console.log(`Found ${featureIssues.length} feature issues`);
@@ -212,18 +242,6 @@ jobs:
                     });
                     
                     console.log(`    ✅ Updated Week field to "${weekField.title}"`);
-                    
-                    // Add a comment on the sub-issue
-                    try {
-                      await github.rest.issues.createComment({
-                        owner: subIssue.repository.owner.login,
-                        repo: subIssue.repository.name,
-                        issue_number: subIssue.number,
-                        body: `🤖 Week automatically updated to **${weekField.title}** to match parent feature.`
-                      });
-                    } catch (error) {
-                      console.log(`    ⚠️ Could not add comment: ${error.message}`);
-                    }
                   } catch (error) {
                     console.log(`    ❌ Error updating Week field: ${error.message}`);
                   }
