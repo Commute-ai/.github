@@ -1,24 +1,20 @@
-name: Sync Sub-issues When Parent Changes
+name: Sync Week Field from Features to Subtasks
 
 on:
-  issues:
-    types: [opened, edited]
-  project_card:
-    types: [moved, edited]
+  workflow_dispatch:  # Manual trigger
   schedule:
-    - cron: "*/15 * * * *"   # every 15 minutes
-  workflow_dispatch:  # Allows manual triggering
+    - cron: "*/30 * * * *"   # every 30 minutes
 
 permissions:
   issues: write
   contents: read
 
 jobs:
-  sync-to-children:
+  sync-week-field:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Sync iteration to all sub-issues
+      - name: Sync Week field from parent features to subtasks
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ORG_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
@@ -26,18 +22,10 @@ jobs:
             const ORG = 'Commute-ai';
             const PROJECT_NUM = 1;
             
-            // Get parent issue node ID
-            const parentIssue = await github.rest.issues.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number
-            });
+            console.log('Starting sync of Week field from features to subtasks');
             
-            const parentNodeId = parentIssue.data.node_id;
-            console.log(`📋 Processing parent issue #${context.issue.number}`);
-            
-            // Query: Get parent's sub-issues and iteration
-            const query = `
+            // 1. Query the project to get all items with their Week field values
+            const projectQuery = `
               query($org: String!, $projNum: Int!) {
                 organization(login: $org) {
                   projectV2(number: $projNum) {
@@ -49,8 +37,17 @@ jobs:
                           ... on Issue {
                             id
                             number
+                            title
                             repository {
                               name
+                              owner {
+                                login
+                              }
+                            }
+                            labels(first: 10) {
+                              nodes {
+                                name
+                              }
                             }
                           }
                         }
@@ -72,128 +69,168 @@ jobs:
                     }
                   }
                 }
-                parent: node(id: $parentId) {
-                  ... on Issue {
-                    subIssues(first: 50) {
-                      nodes {
-                        id
-                        number
-                        repository {
-                          owner {
-                            login
+              }
+            `;
+            
+            // Get the project data
+            const projectData = await github.graphql(projectQuery, {
+              org: ORG,
+              projNum: PROJECT_NUM
+            });
+            
+            const project = projectData.organization.projectV2;
+            const allItems = project.items.nodes;
+            
+            console.log(`Found ${allItems.length} items in project`);
+            
+            // 2. Find feature issues in .github repo
+            const featureIssues = allItems.filter(item => {
+              // Check if it's an issue in .github repo
+              if (
+                !item.content || 
+                !item.content.repository || 
+                item.content.repository.name !== '.github'
+              ) {
+                return false;
+              }
+              
+              // Check if it has the 'Feature' label
+              const hasFeatureLabel = item.content.labels?.nodes?.some(
+                label => label.name.toLowerCase() === 'feature'
+              );
+              
+              return hasFeatureLabel;
+            });
+            
+            console.log(`Found ${featureIssues.length} feature issues`);
+            
+            // 3. Process each feature issue
+            for (const featureIssue of featureIssues) {
+              if (!featureIssue.content) continue;
+              
+              console.log(`\nProcessing feature: ${featureIssue.content.repository.name}#${featureIssue.content.number} - ${featureIssue.content.title}`);
+              
+              // Get the Week field for this feature
+              const weekField = featureIssue.fieldValues.nodes.find(
+                fv => fv.field?.name === 'Week' && fv.iterationId
+              );
+              
+              if (!weekField) {
+                console.log(`  ⏭️ Feature has no Week field set, skipping`);
+                continue;
+              }
+              
+              console.log(`  📅 Week: ${weekField.title}`);
+              
+              // 4. Get all sub-issues for this feature
+              const subIssuesQuery = `
+                query($featureId: ID!) {
+                  node(id: $featureId) {
+                    ... on Issue {
+                      subIssues(first: 50) {
+                        nodes {
+                          id
+                          number
+                          title
+                          repository {
+                            name
+                            owner {
+                              login
+                            }
                           }
-                          name
                         }
                       }
                     }
                   }
                 }
-              }
-            `;
-            
-            const data = await github.graphql(query, {
-              org: ORG,
-              projNum: PROJECT_NUM,
-              parentId: parentNodeId,
-              headers: {
-                'GraphQL-Features': 'sub_issues'
-              }
-            });
-            
-            const allItems = data.organization.projectV2.items.nodes;
-            const parentItem = allItems.find(item => item.content?.id === parentNodeId);
-            const subIssues = data.parent.subIssues.nodes;
-            
-            if (!parentItem) {
-              console.log('⏭️ Parent not in project board, skipping');
-              return;
-            }
-            
-            if (subIssues.length === 0) {
-              console.log('⏭️ No sub-issues found');
-              return;
-            }
-            
-            console.log(`✅ Found ${subIssues.length} sub-issues`);
-            
-            // Get parent's iteration
-            const parentIteration = parentItem.fieldValues.nodes.find(
-              fv => fv.field?.name === 'Week' && fv.iterationId
-            );
-            
-            if (!parentIteration) {
-              console.log('⏭️ Parent has no iteration set');
-              return;
-            }
-            
-            console.log(`🔄 Parent iteration: ${parentIteration.title}`);
-            
-            // Get all sub-issue items from project
-            const project = data.organization.projectV2;
-            
-            for (const subIssue of subIssues) {
-              console.log(`\n📌 Processing sub-issue: ${subIssue.repository.name}#${subIssue.number}`);
+              `;
               
-              // Get sub-issue project item
-              const subItemQuery = `
-                query($org: String!, $projNum: Int!, $subIssueId: ID!) {
-                  organization(login: $org) {
-                    projectV2(number: $projNum) {
-                      items(first: 1, filterBy: {contentId: $subIssueId}) {
-                        nodes {
+              try {
+                const subIssuesData = await github.graphql(subIssuesQuery, {
+                  featureId: featureIssue.content.id
+                }, {
+                  headers: {
+                    'GraphQL-Features': 'sub_issues'
+                  }
+                });
+                
+                const subIssues = subIssuesData.node.subIssues.nodes;
+                
+                if (subIssues.length === 0) {
+                  console.log(`  ℹ️ No sub-issues found for this feature`);
+                  continue;
+                }
+                
+                console.log(`  ✅ Found ${subIssues.length} sub-issues`);
+                
+                // 5. Update each sub-issue's Week field to match the parent
+                for (const subIssue of subIssues) {
+                  console.log(`  📌 Processing sub-issue: ${subIssue.repository.name}#${subIssue.number} - ${subIssue.title}`);
+                  
+                  // Find this sub-issue in the project
+                  const subIssueInProject = allItems.find(item => 
+                    item.content?.id === subIssue.id
+                  );
+                  
+                  if (!subIssueInProject) {
+                    console.log(`    ⚠️ Sub-issue not found in project, skipping`);
+                    continue;
+                  }
+                  
+                  // Check if the Week field already matches
+                  const subIssueWeekField = subIssueInProject.fieldValues.nodes.find(
+                    fv => fv.field?.name === 'Week'
+                  );
+                  
+                  if (subIssueWeekField && subIssueWeekField.iterationId === weekField.iterationId) {
+                    console.log(`    ✓ Week field already matches (${weekField.title}), no update needed`);
+                    continue;
+                  }
+                  
+                  // Update the Week field
+                  const updateMutation = `
+                    mutation($projId: ID!, $itemId: ID!, $fieldId: ID!, $iterId: String!) {
+                      updateProjectV2ItemFieldValue(input: {
+                        projectId: $projId
+                        itemId: $itemId
+                        fieldId: $fieldId
+                        value: { iterationId: $iterId }
+                      }) {
+                        projectV2Item {
                           id
                         }
                       }
                     }
-                  }
-                }
-              `;
-              
-              const subItemData = await github.graphql(subItemQuery, {
-                org: ORG,
-                projNum: PROJECT_NUM,
-                subIssueId: subIssue.id
-              });
-              
-              const subItem = subItemData.organization.projectV2.items.nodes[0];
-              
-              if (!subItem) {
-                console.log(`  ⚠️ Sub-issue not in project, skipping`);
-                continue;
-              }
-              
-              // Update iteration
-              const updateMutation = `
-                mutation($projId: ID!, $itemId: ID!, $fieldId: ID!, $iterId: String!) {
-                  updateProjectV2ItemFieldValue(input: {
-                    projectId: $projId
-                    itemId: $itemId
-                    fieldId: $fieldId
-                    value: { iterationId: $iterId }
-                  }) {
-                    projectV2Item {
-                      id
+                  `;
+                  
+                  try {
+                    await github.graphql(updateMutation, {
+                      projId: project.id,
+                      itemId: subIssueInProject.id,
+                      fieldId: weekField.field.id,
+                      iterId: weekField.iterationId
+                    });
+                    
+                    console.log(`    ✅ Updated Week field to "${weekField.title}"`);
+                    
+                    // Add a comment on the sub-issue
+                    try {
+                      await github.rest.issues.createComment({
+                        owner: subIssue.repository.owner.login,
+                        repo: subIssue.repository.name,
+                        issue_number: subIssue.number,
+                        body: `🤖 Week automatically updated to **${weekField.title}** to match parent feature.`
+                      });
+                    } catch (error) {
+                      console.log(`    ⚠️ Could not add comment: ${error.message}`);
                     }
+                  } catch (error) {
+                    console.log(`    ❌ Error updating Week field: ${error.message}`);
                   }
                 }
-              `;
-              
-              await github.graphql(updateMutation, {
-                projId: project.id,
-                itemId: subItem.id,
-                fieldId: parentIteration.field.id,
-                iterId: parentIteration.iterationId
-              });
-              
-              console.log(`  ✅ Synced to: ${parentIteration.title}`);
-              
-              // Comment on sub-issue
-              await github.rest.issues.createComment({
-                owner: subIssue.repository.owner.login,
-                repo: subIssue.repository.name,
-                issue_number: subIssue.number,
-                body: `🤖 Week automatically synced to **${parentIteration.title}** from parent issue.`
-              });
+              } catch (error) {
+                console.log(`  ❌ Error fetching sub-issues: ${error.message}`);
+              }
             }
             
-            console.log(`\n✅ Synced ${subIssues.length} sub-issues!`);
+            console.log('\n✅ Completed Week field synchronization');
