@@ -25,9 +25,9 @@ jobs:
             const ORG = 'Commute-ai';
             const PROJECT_NUM = 1;
             
-            console.log('🔄 Starting Week sync from Features to children...');
+            console.log('🔄 Starting Week sync from .github repo issues to their children...');
             
-            // Query to get all project items with their field values and sub-issues
+            // Query to get all project items from .github repo with sub-issues
             const query = `
               query($org: String!, $projNum: Int!) {
                 organization(login: $org) {
@@ -74,34 +74,6 @@ jobs:
                                 }
                               }
                             }
-                            ... on ProjectV2ItemFieldSingleSelectValue {
-                              name
-                              optionId
-                              field {
-                                ... on ProjectV2SingleSelectField {
-                                  id
-                                  name
-                                }
-                              }
-                            }
-                            ... on ProjectV2ItemFieldTextValue {
-                              text
-                              field {
-                                ... on ProjectV2Field {
-                                  id
-                                  name
-                                }
-                              }
-                            }
-                            ... on ProjectV2ItemFieldDateValue {
-                              date
-                              field {
-                                ... on ProjectV2Field {
-                                  id
-                                  name
-                                }
-                              }
-                            }
                           }
                         }
                       }
@@ -123,51 +95,38 @@ jobs:
               const project = data.organization.projectV2;
               const allItems = project.items.nodes;
               
-              // Filter for Feature type issues
-              const featureIssues = allItems.filter(item => {
-                if (!item.content) return false;
-                
-                // Look for Type field with value "Feature" in fieldValues
-                const typeField = item.fieldValues.nodes.find(fv => {
-                  return fv.field?.name === 'Type' && 
-                         fv.name === 'Feature' &&
-                         fv.optionId; // It's a single select field
-                });
-                
-                return typeField !== undefined;
+              // Filter for issues in .github repo that have sub-issues
+              const parentIssues = allItems.filter(item => {
+                return item.content?.repository?.name === '.github' && 
+                       item.content?.subIssues?.nodes?.length > 0;
               });
               
-              console.log(`📋 Found ${featureIssues.length} Feature issues`);
+              console.log(`📋 Found ${parentIssues.length} parent issues in .github repo with sub-issues`);
               
               let totalSynced = 0;
               
-              // Process each Feature issue
-              for (const feature of featureIssues) {
-                if (!feature.content?.subIssues?.nodes || feature.content.subIssues.nodes.length === 0) {
-                  continue;
-                }
+              // Process each parent issue
+              for (const parent of parentIssues) {
+                const parentTitle = parent.content.title;
+                const parentNumber = parent.content.number;
                 
-                const featureTitle = feature.content.title;
-                const featureNumber = feature.content.number;
-                const featureRepo = feature.content.repository.name;
+                console.log(`\n🎯 Processing parent issue: .github#${parentNumber} - ${parentTitle}`);
+                console.log(`   Found ${parent.content.subIssues.nodes.length} sub-issues`);
                 
-                console.log(`\n🎯 Processing Feature: ${featureRepo}#${featureNumber} - ${featureTitle}`);
-                console.log(`   Found ${feature.content.subIssues.nodes.length} sub-issues`);
-                
-                // Get Feature's Week iteration
-                const featureWeek = feature.fieldValues.nodes.find(
+                // Get parent's Week iteration
+                const parentWeek = parent.fieldValues.nodes.find(
                   fv => fv.field?.name === 'Week' && fv.iterationId
                 );
                 
-                if (!featureWeek) {
-                  console.log('   ⚠️ Feature has no Week set, skipping');
+                if (!parentWeek) {
+                  console.log('   ⚠️ Parent has no Week set, skipping');
                   continue;
                 }
                 
-                console.log(`   📅 Feature Week: ${featureWeek.title}`);
+                console.log(`   📅 Parent Week: ${parentWeek.title}`);
                 
                 // Update each sub-issue
-                for (const subIssue of feature.content.subIssues.nodes) {
+                for (const subIssue of parent.content.subIssues.nodes) {
                   const subRepo = subIssue.repository.name;
                   const subNumber = subIssue.number;
                   
@@ -188,8 +147,8 @@ jobs:
                     fv => fv.field?.name === 'Week' && fv.iterationId
                   );
                   
-                  if (currentWeek?.iterationId === featureWeek.iterationId) {
-                    console.log(`      ✅ Already synced to ${featureWeek.title}`);
+                  if (currentWeek?.iterationId === parentWeek.iterationId) {
+                    console.log(`      ✅ Already synced to ${parentWeek.title}`);
                     continue;
                   }
                   
@@ -213,11 +172,11 @@ jobs:
                     await github.graphql(updateMutation, {
                       projId: project.id,
                       itemId: subItem.id,
-                      fieldId: featureWeek.field.id,
-                      iterId: featureWeek.iterationId
+                      fieldId: parentWeek.field.id,
+                      iterId: parentWeek.iterationId
                     });
                     
-                    console.log(`      ✅ Updated to ${featureWeek.title}`);
+                    console.log(`      ✅ Updated to ${parentWeek.title}`);
                     totalSynced++;
                     
                   } catch (updateError) {
