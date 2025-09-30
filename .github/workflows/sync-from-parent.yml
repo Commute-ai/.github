@@ -1,0 +1,196 @@
+name: Sync Sub-issues When Parent Changes
+
+on:
+  issues:
+    types: [opened, edited]
+  project_card:
+    types: [moved, edited]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  sync-to-children:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Sync iteration to all sub-issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.ORG_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
+          script: |
+            const ORG = 'Commute-ai';
+            const PROJECT_NUM = 1;
+            
+            // Get parent issue node ID
+            const parentIssue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            
+            const parentNodeId = parentIssue.data.node_id;
+            console.log(`📋 Processing parent issue #${context.issue.number}`);
+            
+            // Query: Get parent's sub-issues and iteration
+            const query = `
+              query($org: String!, $projNum: Int!) {
+                organization(login: $org) {
+                  projectV2(number: $projNum) {
+                    id
+                    items(first: 100) {
+                      nodes {
+                        id
+                        content {
+                          ... on Issue {
+                            id
+                            number
+                            repository {
+                              name
+                            }
+                          }
+                        }
+                        fieldValues(first: 20) {
+                          nodes {
+                            ... on ProjectV2ItemFieldIterationValue {
+                              title
+                              iterationId
+                              field {
+                                ... on ProjectV2IterationField {
+                                  id
+                                  name
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                parent: node(id: $parentId) {
+                  ... on Issue {
+                    subIssues(first: 50) {
+                      nodes {
+                        id
+                        number
+                        repository {
+                          owner {
+                            login
+                          }
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+            
+            const data = await github.graphql(query, {
+              org: ORG,
+              projNum: PROJECT_NUM,
+              parentId: parentNodeId,
+              headers: {
+                'GraphQL-Features': 'sub_issues'
+              }
+            });
+            
+            const allItems = data.organization.projectV2.items.nodes;
+            const parentItem = allItems.find(item => item.content?.id === parentNodeId);
+            const subIssues = data.parent.subIssues.nodes;
+            
+            if (!parentItem) {
+              console.log('⏭️ Parent not in project board, skipping');
+              return;
+            }
+            
+            if (subIssues.length === 0) {
+              console.log('⏭️ No sub-issues found');
+              return;
+            }
+            
+            console.log(`✅ Found ${subIssues.length} sub-issues`);
+            
+            // Get parent's iteration
+            const parentIteration = parentItem.fieldValues.nodes.find(
+              fv => fv.field?.name === 'Week' && fv.iterationId
+            );
+            
+            if (!parentIteration) {
+              console.log('⏭️ Parent has no iteration set');
+              return;
+            }
+            
+            console.log(`🔄 Parent iteration: ${parentIteration.title}`);
+            
+            // Get all sub-issue items from project
+            const project = data.organization.projectV2;
+            
+            for (const subIssue of subIssues) {
+              console.log(`\n📌 Processing sub-issue: ${subIssue.repository.name}#${subIssue.number}`);
+              
+              // Get sub-issue project item
+              const subItemQuery = `
+                query($org: String!, $projNum: Int!, $subIssueId: ID!) {
+                  organization(login: $org) {
+                    projectV2(number: $projNum) {
+                      items(first: 1, filterBy: {contentId: $subIssueId}) {
+                        nodes {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              `;
+              
+              const subItemData = await github.graphql(subItemQuery, {
+                org: ORG,
+                projNum: PROJECT_NUM,
+                subIssueId: subIssue.id
+              });
+              
+              const subItem = subItemData.organization.projectV2.items.nodes[0];
+              
+              if (!subItem) {
+                console.log(`  ⚠️ Sub-issue not in project, skipping`);
+                continue;
+              }
+              
+              // Update iteration
+              const updateMutation = `
+                mutation($projId: ID!, $itemId: ID!, $fieldId: ID!, $iterId: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $projId
+                    itemId: $itemId
+                    fieldId: $fieldId
+                    value: { iterationId: $iterId }
+                  }) {
+                    projectV2Item {
+                      id
+                    }
+                  }
+                }
+              `;
+              
+              await github.graphql(updateMutation, {
+                projId: project.id,
+                itemId: subItem.id,
+                fieldId: parentIteration.field.id,
+                iterId: parentIteration.iterationId
+              });
+              
+              console.log(`  ✅ Synced to: ${parentIteration.title}`);
+              
+              // Comment on sub-issue
+              await github.rest.issues.createComment({
+                owner: subIssue.repository.owner.login,
+                repo: subIssue.repository.name,
+                issue_number: subIssue.number,
+                body: `🤖 Week automatically synced to **${parentIteration.title}** from parent issue.`
+              });
+            }
+            
+            console.log(`\n✅ Synced ${subIssues.length} sub-issues!`);
