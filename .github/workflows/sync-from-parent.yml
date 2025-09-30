@@ -27,7 +27,7 @@ jobs:
             
             console.log('🔄 Starting Week sync from Features to children...');
             
-            // Query to get all project items with Feature type and their sub-issues
+            // Query to get all project items with their field values and sub-issues
             const query = `
               query($org: String!, $projNum: Int!) {
                 organization(login: $org) {
@@ -76,8 +76,27 @@ jobs:
                             }
                             ... on ProjectV2ItemFieldSingleSelectValue {
                               name
+                              optionId
                               field {
                                 ... on ProjectV2SingleSelectField {
+                                  id
+                                  name
+                                }
+                              }
+                            }
+                            ... on ProjectV2ItemFieldTextValue {
+                              text
+                              field {
+                                ... on ProjectV2Field {
+                                  id
+                                  name
+                                }
+                              }
+                            }
+                            ... on ProjectV2ItemFieldDateValue {
+                              date
+                              field {
+                                ... on ProjectV2Field {
                                   id
                                   name
                                 }
@@ -104,16 +123,18 @@ jobs:
               const project = data.organization.projectV2;
               const allItems = project.items.nodes;
               
-              // Filter for Feature type issues (Type field = Feature)
+              // Filter for Feature type issues
               const featureIssues = allItems.filter(item => {
                 if (!item.content) return false;
                 
-                // Check Type field for Feature value
-                const typeField = item.fieldValues.nodes.find(
-                  fv => fv.field?.name === 'Type' && fv.name
-                );
+                // Look for Type field with value "Feature" in fieldValues
+                const typeField = item.fieldValues.nodes.find(fv => {
+                  return fv.field?.name === 'Type' && 
+                         fv.name === 'Feature' &&
+                         fv.optionId; // It's a single select field
+                });
                 
-                return typeField?.name === 'Feature';
+                return typeField !== undefined;
               });
               
               console.log(`📋 Found ${featureIssues.length} Feature issues`);
