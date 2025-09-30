@@ -9,7 +9,7 @@
 - `ui` - React Native mobile app [Commute-ai/ui](https://github.com/Commute-ai/ui)
 - `backend` - Python FastAPI server [Commute-ai/backend](https://github.com/Commute-ai/backend)
 - `ai-agents` - AI agent implementations [Commute-ai/ai-agents](https://github.com/Commute-ai/ai-agents)
-- `commute.ai` - Documentation and **all issues/project management** [Commute-ai/commute.ai](https://github.com/Commute-ai/commute.ai)
+- `.github` - Organization documentation and **user stories** [Commute-ai/.github](https://github.com/Commute-ai/.github)
 
 **GitHub Project:** Single org-level board tracking all work: [Commute-ai/projects/1](https://github.com/orgs/Commute-ai/projects/1)
 
@@ -21,16 +21,18 @@
 - Format: "As [user] I want [goal] so that [benefit]"
 - Contains acceptance criteria
 - Links to subtasks as checklist in description
+- **Created in:** `.github` repository
 - Created by: Any team member
-- Example: [As a user, I want to login and see that I am logged in, so I can save my preferences](https://github.com/Commute-ai/commute.ai/issues/5)
+- Example: [As a user, I want to login and see that I am logged in, so I can save my preferences](https://github.com/Commute-ai/.github/issues/5)
 
 ### Subtasks (Type: `Subtask`)
 
 - Specific technical implementation task
-- Links to parent
+- Links to parent user story
+- **Created in:** The specific code repository (`ui`, `backend`, or `ai-agents`)
 - Assigned to: Developer who will complete it
 - Created by: Any team member
-- Example: [Initialize the backend project with basic FastAPI setup](https://github.com/Commute-ai/commute.ai/issues/12)
+- Example: [Initialize the backend project with basic FastAPI setup](https://github.com/Commute-ai/backend/issues/1)
 
 ## Sprint Workflow
 
@@ -39,10 +41,10 @@
 **Monday - Sprint Planning**
 
 - Review last sprint completions
-- Create and discuss new user stories
-- Break down user stories into subtasks
-- Assign subtasks to developers?
-- Add everything to weekly milestone
+- Create and discuss new user stories in `.github` repo
+- Break down user stories into subtasks in specific repos
+- Assign subtasks to developers
+- User stories tracked with weekly milestones (subtasks are not)
 
 **During Week - Development**
 
@@ -60,7 +62,7 @@
 - `Subtask` - Implementation task
 - `Bug` - Fix needed
 - `Docs` - Documentation
-- `Chore` - Some quick task not fitting above
+- `Chore` - Quick task not fitting above
 
 **Component:**
 
@@ -87,7 +89,9 @@
 
 ## Milestones
 
-Weekly milestones track sprint scope: [commute.ai/milestones](https://github.com/Commute-ai/commute.ai/milestones)
+Weekly milestones track sprint scope and **only apply to user stories** in `.github` repo: [.github/milestones](https://github.com/Commute-ai/.github/milestones)
+
+Subtasks in code repos do not use milestones - they link to their parent user story instead.
 
 ## Communication
 
@@ -100,18 +104,19 @@ Weekly milestones track sprint scope: [commute.ai/milestones](https://github.com
 **Monday:**
 
 ```
-1. Team creates user story: "User can login"
-2. Break into subtasks:
-   - #5 "Setup FastAPI auth" (backend, assigned to Alice)
-   - #6 "Create login screen" (ui, assigned to Bob)
-3. Add to Week 1 milestone
+1. Team creates user story in .github repo: "User can login"
+2. Break into subtasks in specific repos:
+   - Commute-ai/backend#5 "Setup FastAPI auth" (assigned to Alice)
+   - Commute-ai/ui#6 "Create login screen" (assigned to Bob)
+3. Add user story to Week 1 milestone in .github
+4. Link subtasks to user story in description
 ```
 
 **During Week:**
 
 ```
 Alice & Bob:
-- Move issues to "In Progress"
+- Move issues to "In Progress" on project board
 - Develop and commit code
 - Create PRs with "Closes #5" / "Closes #6"
 - Review each other's work
@@ -121,4 +126,4 @@ Alice & Bob:
 
 ---
 
-**All issues live in `commute.ai` repo [Commute-ai/commute.ai](https://github.com/Commute-ai/commute.ai). Use component labels to indicate which codebase they affect.**
+**User stories live in `.github` repo [Commute-ai/.github](https://github.com/Commute-ai/.github). Subtasks live in their specific code repositories (`ui`, `backend`, `ai-agents`). Use component labels to indicate which codebase user stories affect.**
