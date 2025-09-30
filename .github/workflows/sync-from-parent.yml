@@ -5,6 +5,8 @@ on:
     types: [opened, edited]
   project_card:
     types: [moved, edited]
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 minutes
 
 permissions:
   issues: write
