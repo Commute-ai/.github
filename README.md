@@ -24,20 +24,6 @@ This is the main repository for the Commute.ai project. The actual code is organ
 - **[ai-agents](https://github.com/Commute-ai/ai-agents)** 🤖 - AI agents and recommendation engine
 - **[commute.ai](https://github.com/Commute-ai/commute.ai)** 📚 - Documentation and project specs
 
-## Architecture
-
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Mobile App    │────│   Backend API   │────│   AI Agents     │
-│   (Frontend)    │    │   + Database    │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                              │
-                       ┌─────────────────┐
-                       │   HSL API +     │
-                       │  External Data  │
-                       └─────────────────┘
-```
-
 ## Target Users
 
 Urban professionals in Helsinki who use public transport daily and value experience quality over pure efficiency. People willing to trade 5-10 minutes for comfort, views, or peace of mind.
