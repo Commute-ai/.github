@@ -2,8 +2,12 @@
 
 ## What needs to be done
 
-- [] How did the demo go? Feedback
-- [] Fill the development diary
-- [] Clerk integration
-- [] User stories
+- [x] How did the demo go? Feedback
+    - Scheduled prompting. -> created user story
+    - Saving of specific trip. -> created user story
+    - We should go ask people what they want. -> not right now
+- [x] Clerk integration
+- [x] Fill the development diary
+    - Zijad will do it
+- [x] User stories
 
