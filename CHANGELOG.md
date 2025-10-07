@@ -7,13 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.2.0] - Planned for 2025-10-07
+## [0.3.0] - Planned for 2025-10-13
 
 ### Added
 
 - [As a user, I want to input two places and see the routes between them, so that I can plan my commute efficiently](https://github.com/Commute-ai/.github/issues/1)
 - [As a user, I want to see my username and that I am logged in, so that I can confirm my session is active and know which account I'm using](https://github.com/Commute-ai/.github/issues/4)
 - [As a user, I want to see an interactive map similar to the HSL app in the UI, so that I can visualize transit routes, stops, and my location in a familiar interface](https://github.com/Commute-ai/.github/issues/7)
+
+---
+
+## [0.2.0] - 2025-10-07
+
+**Note:** This version was used to finnish 0.1.0 work that was not released.
 
 ---
 
@@ -31,8 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release Links
 
-- [0.2.0 Release](https://github.com/Commute-ai/.github/releases/tag/v0.2.0)
-- [0.2.0 Milestone](https://github.com/Commute-ai/.github/milestone/2)
 - [Project Board](https://github.com/orgs/Commute-ai/projects/1)
 
 ## Versioning Strategy
