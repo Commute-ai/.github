@@ -2,5 +2,8 @@
 
 ## What needs to be done
 
-- [] How did the demo go?
+- [] How did the demo go? Feedback
+- [] Fill the development diary
+- [] Clerk integration
+- [] User stories
 
