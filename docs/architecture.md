@@ -1,5 +1,9 @@
 # Commute.ai - Architecture (WIP)
 
+## Overview
+
+![Architecture Diagram](./assets/commute-ai-architecture.png)
+
 ## Components
 
 ### Mobile App (`ui`)
