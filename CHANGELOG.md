@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Note:** Most work was partially done this week, but not completed. The work will continue in week 5.
 
+### Fixed
+
+- [Sign-up error messages are too vague in UI](https://github.com/Commute-ai/ui/issues/39)
+
 ## [0.3.0](https://github.com/Commute-ai/.github/releases/tag/v0.3.0) - 2025-10-13
 
 ### Added
