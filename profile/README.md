@@ -20,7 +20,7 @@ Commute.ai is a mobile app that enhances HSL routes with AI-powered personalizat
 - **[Project Board](https://github.com/orgs/Commute-ai/projects/1)** - All active work
 - **[User Stories](https://github.com/Commute-ai/.github/issues)** - Feature requests (`.github` repo)
 - **Subtasks** - Implementation tasks (in specific repos: `ui`, `backend`, `ai-agents`)
-- **[Milestones](https://github.com/Commute-ai/.github/milestones)** - Weekly sprint tracking
+- **[Milestones](https://github.com/Commute-ai/.github/milestones)** - Tracking progress towards major goals
 
 ## Communication
 
