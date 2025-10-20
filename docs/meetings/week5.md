@@ -2,7 +2,8 @@
 
 ## What needs to be done
 
-- [] Fill the development diary
-- [] What is the status?
-- [] User stories for week 5
+- [x] Fill the development diary
+    - Avi will do it
+- [ ] What is the status?
+- [ ] User stories for week 5
 
