@@ -3,10 +3,10 @@ name: Sync Week from Features to Children
 on:
   # Manual trigger
   workflow_dispatch:
-  
-  # Run every 30 minutes
+
+  # Run every 4 hours
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: "0 */4 * * *"
 
 permissions:
   issues: write
@@ -15,7 +15,7 @@ permissions:
 jobs:
   sync-week-to-children:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Sync Week field from Features to their children
         uses: actions/github-script@v7
@@ -24,9 +24,9 @@ jobs:
           script: |
             const ORG = 'Commute-ai';
             const PROJECT_NUM = 1;
-            
+
             console.log('🔄 Starting Week sync from .github repo issues to their children...');
-            
+
             // Query to get all project items from .github repo with sub-issues
             const query = `
               query($org: String!, $projNum: Int!) {
@@ -82,7 +82,7 @@ jobs:
                 }
               }
             `;
-            
+
             try {
               const data = await github.graphql(query, {
                 org: ORG,
@@ -91,102 +91,156 @@ jobs:
                   'GraphQL-Features': 'sub_issues'
                 }
               });
-              
+
               const project = data.organization.projectV2;
               const allItems = project.items.nodes;
-              
+
               // Filter for issues in .github repo that have sub-issues
               const parentIssues = allItems.filter(item => {
                 return item.content?.repository?.name === '.github' && 
                        item.content?.subIssues?.nodes?.length > 0;
               });
-              
+
               console.log(`📋 Found ${parentIssues.length} parent issues in .github repo with sub-issues`);
-              
+
               let totalSynced = 0;
-              
+
               // Process each parent issue
               for (const parent of parentIssues) {
                 const parentTitle = parent.content.title;
                 const parentNumber = parent.content.number;
-                
+
                 console.log(`\n🎯 Processing parent issue: .github#${parentNumber} - ${parentTitle}`);
                 console.log(`   Found ${parent.content.subIssues.nodes.length} sub-issues`);
-                
-                // Get parent's Week iteration
+
+                // Get parent's Week iteration (including null/empty state)
                 const parentWeek = parent.fieldValues.nodes.find(
-                  fv => fv.field?.name === 'Week' && fv.iterationId
+                  fv => fv.field?.name === 'Week'
                 );
-                
-                if (!parentWeek) {
-                  console.log('   ⚠️ Parent has no Week set, skipping');
+
+                // Determine if parent has a Week set or is empty
+                const hasParentWeek = parentWeek && parentWeek.iterationId;
+                const parentWeekId = hasParentWeek ? parentWeek.iterationId : null;
+                const parentWeekTitle = hasParentWeek ? parentWeek.title : 'No Week';
+
+                console.log(`   📅 Parent Week: ${parentWeekTitle}`);
+
+                // Get the Week field ID for updates (need this even for clearing)
+                let weekFieldId = null;
+                if (parentWeek) {
+                  weekFieldId = parentWeek.field.id;
+                } else {
+                  // If parent doesn't have Week field, find it from any item that has it
+                  for (const item of allItems) {
+                    const weekField = item.fieldValues.nodes.find(
+                      fv => fv.field?.name === 'Week'
+                    );
+                    if (weekField) {
+                      weekFieldId = weekField.field.id;
+                      break;
+                    }
+                  }
+                }
+
+                if (!weekFieldId) {
+                  console.log('   ⚠️ Could not find Week field ID, skipping');
                   continue;
                 }
-                
-                console.log(`   📅 Parent Week: ${parentWeek.title}`);
-                
+
                 // Update each sub-issue
                 for (const subIssue of parent.content.subIssues.nodes) {
                   const subRepo = subIssue.repository.name;
                   const subNumber = subIssue.number;
-                  
+
                   console.log(`   📌 Syncing sub-issue: ${subRepo}#${subNumber}`);
-                  
+
                   // Find sub-issue in project items
                   const subItem = allItems.find(
                     item => item.content?.id === subIssue.id
                   );
-                  
+
                   if (!subItem) {
                     console.log(`      ⚠️ Sub-issue not in project, skipping`);
                     continue;
                   }
-                  
-                  // Check if sub-issue already has the same Week
+
+                  // Check current Week of sub-issue
                   const currentWeek = subItem.fieldValues.nodes.find(
-                    fv => fv.field?.name === 'Week' && fv.iterationId
+                    fv => fv.field?.name === 'Week'
                   );
-                  
-                  if (currentWeek?.iterationId === parentWeek.iterationId) {
-                    console.log(`      ✅ Already synced to ${parentWeek.title}`);
+
+                  const currentWeekId = currentWeek?.iterationId || null;
+
+                  // Check if sub-issue already matches parent state
+                  if (currentWeekId === parentWeekId) {
+                    console.log(`      ✅ Already synced to ${parentWeekTitle}`);
                     continue;
                   }
-                  
-                  // Update the Week field
+
+                  // Update the Week field (set to specific iteration or clear it)
                   try {
-                    const updateMutation = `
-                      mutation($projId: ID!, $itemId: ID!, $fieldId: ID!, $iterId: String!) {
-                        updateProjectV2ItemFieldValue(input: {
-                          projectId: $projId
-                          itemId: $itemId
-                          fieldId: $fieldId
-                          value: { iterationId: $iterId }
-                        }) {
-                          projectV2Item {
-                            id
+                    let updateMutation;
+                    let variables;
+
+                    if (hasParentWeek) {
+                      // Set to specific iteration
+                      updateMutation = `
+                        mutation($projId: ID!, $itemId: ID!, $fieldId: ID!, $iterId: String!) {
+                          updateProjectV2ItemFieldValue(input: {
+                            projectId: $projId
+                            itemId: $itemId
+                            fieldId: $fieldId
+                            value: { iterationId: $iterId }
+                          }) {
+                            projectV2Item {
+                              id
+                            }
                           }
                         }
-                      }
-                    `;
-                    
-                    await github.graphql(updateMutation, {
-                      projId: project.id,
-                      itemId: subItem.id,
-                      fieldId: parentWeek.field.id,
-                      iterId: parentWeek.iterationId
-                    });
-                    
-                    console.log(`      ✅ Updated to ${parentWeek.title}`);
+                      `;
+
+                      variables = {
+                        projId: project.id,
+                        itemId: subItem.id,
+                        fieldId: weekFieldId,
+                        iterId: parentWeekId
+                      };
+                    } else {
+                      // Clear the field (set to null)
+                      updateMutation = `
+                        mutation($projId: ID!, $itemId: ID!, $fieldId: ID!) {
+                          clearProjectV2ItemFieldValue(input: {
+                            projectId: $projId
+                            itemId: $itemId
+                            fieldId: $fieldId
+                          }) {
+                            projectV2Item {
+                              id
+                            }
+                          }
+                        }
+                      `;
+
+                      variables = {
+                        projId: project.id,
+                        itemId: subItem.id,
+                        fieldId: weekFieldId
+                      };
+                    }
+
+                    await github.graphql(updateMutation, variables);
+
+                    console.log(`      ✅ Updated to ${parentWeekTitle}`);
                     totalSynced++;
-                    
+
                   } catch (updateError) {
                     console.log(`      ❌ Failed to update: ${updateError.message}`);
                   }
                 }
               }
-              
+
               console.log(`\n✅ Sync complete! Updated ${totalSynced} sub-issues.`);
-              
+
             } catch (error) {
               console.error('❌ Error during sync:', error.message);
               throw error;
