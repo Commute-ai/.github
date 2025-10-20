@@ -44,7 +44,7 @@
 - Create and discuss new user stories in `.github` repo
 - Break down user stories into subtasks in specific repos
 - Assign subtasks to developers
-- User stories tracked with weekly milestones (subtasks are not)
+- User stories are added to the weekly iteration in the project
 
 **During Week - Development**
 
@@ -84,7 +84,7 @@
    - Review and test `development` branch in staging
    - Merge `development` → `main`
    - Create release tag in `main` (e.g., `v0.2.0`)
-   - Production deployment triggered automatically
+   - Production deployment triggered automatically (Not always)
 
 2. **Start of Sprint:**
    - Continue developing on `development` branch
@@ -114,7 +114,7 @@
 
 ## Milestones
 
-Weekly milestones track sprint scope and **only apply to user stories** in `.github` repo: [.github/milestones](https://github.com/Commute-ai/.github/milestones)
+Weekly iteration field tracks the sprint scope in the project backlog board.
 
 Subtasks in code repos do not use milestones - they link to their parent user story instead.
 
@@ -133,7 +133,7 @@ Subtasks in code repos do not use milestones - they link to their parent user st
 2. Break into subtasks in specific repos:
    - Commute-ai/backend#5 "Setup FastAPI auth" (assigned to Alice)
    - Commute-ai/ui#6 "Create login screen" (assigned to Bob)
-3. Add user story to Week 1 milestone in .github
+3. Set the Week field to Week 1 for the user story
 4. Link subtasks to user story in description
 ```
 
