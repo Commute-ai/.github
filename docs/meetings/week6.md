@@ -4,6 +4,7 @@
 
 - [] Fill the development diary
 - [] What is the status?
+- [] Demo in two weeks. What is needed?
 - [] User stories for week 6
 
 ## Notes
