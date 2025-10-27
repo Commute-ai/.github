@@ -5,11 +5,20 @@ All notable changes to Commute.ai will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.0](https://github.com/Commute-ai/.github/releases/tag/v0.5.0) - Planned for 2025-10-27
+## [0.6.0](https://github.com/Commute-ai/.github/releases/tag/v0.6.0) - Planned for 2025-11-03
 
-- [As a user, I want to input two places and see the routes between them, so that I can plan my commute efficiently](https://github.com/Commute-ai/.github/issues/1)
-- [As a user, I want to see an interactive map similar to the HSL app in the UI, so that I can visualize transit routes, stops, and my location in a familiar interface](https://github.com/Commute-ai/.github/issues/7)
+### Added
+- [As an user when I see the routes from A to B, each route has a one sentence description from the AI](https://github.com/Commute-ai/.github/issues/8)
 - [As an user when I click to expand a specific itinary, I will see all the legs of the itinirary and each leg will have an AI description](https://github.com/Commute-ai/.github/issues/9)
+- [As a user I want to save my routing preferences as a set of text on a preferences page, so that the AI can consider my preferences when generating itniaries](https://github.com/Commute-ai/.github/issues/3)
+
+## [0.5.0](https://github.com/Commute-ai/.github/releases/tag/v0.5.0) - 2025-10-27
+
+### Added
+- [As a user, I want to input two places and see the routes between them, so that I can plan my commute efficiently](https://github.com/Commute-ai/.github/issues/1)
+
+### Fixed
+- [The staging app has a NetworkIssue](https://github.com/Commute-ai/ui/issues/49)
 
 ## [0.4.0](https://github.com/Commute-ai/.github/releases/tag/v0.4.0) - 2025-10-20
 
