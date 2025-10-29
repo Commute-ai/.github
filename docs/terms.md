@@ -4,12 +4,12 @@
 
 | Term               | Definition                                                                                 | Example                                                     |
 | ------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| **Itinerary**      | A complete journey plan from origin to destination. ONE route option that users see.       | 45-min journey: walk 5 min → bus 35 min → walk 5 min        |
+| **Itinerary**      | A complete journey plan from origin to destination       | 45-min journey: walk 5 min → bus 35 min → walk 5 min        |
 | **Leg**            | Single continuous travel segment using one transport mode.                                 | Walking to bus stop, OR bus ride from A to B                |
-| **Route**          | Public transport line metadata (bus/tram/metro number and name). NOT a journey.            | Bus "550 Helsinki - Espoo Express"                          |
-| **Routing**        | The process of calculating possible journeys between two points.                           | Finding all ways to get from home to work                   |
+| **Route**          | Public transport line metadata (bus/tram/metro number and name)            | Bus "550 Helsinki - Espoo Express"                          |
+| **Routing**        | The process of calculating possible itinaries between two points.                           | Finding all ways to get from home to work                   |
 | **Transport Mode** | Method of transportation in a leg.                                                         | WALK, BUS, TRAM, SUBWAY, RAIL, FERRY, BICYCLE, CAR          |
-| **AI Insight**     | 1-2 sentences of real-world context about an itinerary or leg from social media/community. | "Bus usually not crowded at this time. 47 social mentions." |
+| **AI Insight**     | 1-2 sentences of real-world context about an itinerary or leg. | "Bus usually not crowded at this time. 47 social mentions." |
 | **Origin**         | Starting point (latitude/longitude).                                                       | Home: 60.1699, 24.9384                                      |
 | **Destination**    | Ending point (latitude/longitude).                                                         | Work: 60.2055, 24.6559                                      |
 | **Place**          | Named location with coordinates.                                                           | "Kamppi Bus Stop" at 60.169, 24.938                         |
@@ -31,13 +31,13 @@
 
 - ~~"route"~~ when meaning **itinerary**
 - ~~"routes API"~~ when meaning **Routing API** (external HSL)
-- ~~"routing API"~~ when meaning **Routes API** (our endpoint)
 - ~~"route"~~ when meaning **leg**
+- ~~"ai enhancement"~~ or ~~"ai description"~~ when meaning **ai insight**
 
 ### ✅ CORRECT Usage
 
 - "The **routing service** performs **routing** to fetch **itineraries** from the HSL **Routing API**"
 - "Each **itinerary** contains multiple **legs**"
 - "This bus **leg** uses **route** line '550'"
-- "Call our **Routes API** at `/api/v1/routes/search` to get **itineraries**"
+- "Call our **Routibg API** at `/api/v1/routing/search` to get **itineraries**"
 - "This **leg** has an **AI insight** about crowding (47 mentions)"
