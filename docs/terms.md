@@ -4,8 +4,10 @@
 
 | Term               | Definition                                                                                 | Example                                                     |
 | ------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| **Itinerary**      | A complete journey plan from origin to destination       | 45-min journey: walk 5 min → bus 35 min → walk 5 min        |
-| **Leg**            | Single continuous travel segment using one transport mode.                                 | Walking to bus stop, OR bus ride from A to B                |
+| **Itinerary**      | A combination of different transportation modes at certain times to reach from origin to destination.
+For example, walking to a bus stop, taking a bus for two stops and then walking to the final destination.
+Commonly used synonym: journey    | 45-min journey: walk 5 min → bus 35 min → walk 5 min        |
+| **Leg**            | One part of an itinerary, e.g. walking to a bus stop or a bus ride between two stops.                                 | Walking to bus stop, OR bus ride from A to B                |
 | **Route**          | Public transport line metadata (bus/tram/metro number and name)            | Bus "550 Helsinki - Espoo Express"                          |
 | **Routing**        | The process of calculating possible itinaries between two points.                           | Finding all ways to get from home to work                   |
 | **Transport Mode** | Method of transportation in a leg.                                                         | WALK, BUS, TRAM, SUBWAY, RAIL, FERRY, BICYCLE, CAR          |
