@@ -31,7 +31,7 @@ Commute.ai is a mobile app that enhances HSL routes with AI-powered personalizat
 ## Quick Links
 
 - **Hosting:** [coolify.commute.ai.ender.fi](https://coolify.commute.ai.ender.fi/)
-- **Mobile App Demo:** [Expo](https://expo.dev)
+- **Android Mobile App Staging Build:** [Expo.dev](https://expo.dev/accounts/commuteai/projects/commuteai-ui/builds/3275e20a-3bc2-445c-b1fa-1de57e52b971)
 
 ---
 
