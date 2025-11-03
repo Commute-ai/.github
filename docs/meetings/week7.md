@@ -6,6 +6,7 @@
 - [] What is the status?
 - [] Demo in one week. What is needed?
 - [] The app should be working
+- [] The insight endpoint (Zijad)
 - [] User stories for week 7
 
 ## Notes
