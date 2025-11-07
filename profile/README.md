@@ -21,7 +21,6 @@ Our pitch: [Commute.ai Pitch.ppt](https://helsinkifi-my.sharepoint.com/:p:/g/per
 - **[Architecture](https://github.com/Commute-ai/.github/blob/main/docs/architecture.md)** - System design and data flow
 - **[Project Board](https://github.com/orgs/Commute-ai/projects/1)** - All active work
 - **[User Stories](https://github.com/Commute-ai/.github/issues)** - Feature requests (`.github` repo)
-- **Subtasks** - Implementation tasks (in specific repos: `ui`, `backend`, `ai-agents`)
 - **[Milestones](https://github.com/Commute-ai/.github/milestones)** - Tracking progress towards major goals
 
 ## Communication
@@ -32,10 +31,6 @@ Our pitch: [Commute.ai Pitch.ppt](https://helsinkifi-my.sharepoint.com/:p:/g/per
 
 ## Quick Links
 
-- **Hosting:** [coolify.commute.ai.ender.fi](https://coolify.commute.ai.ender.fi/)
+- **Hosting:** [coolify.commuteai.tech](https://coolify.commuteai.tech/)
 - **Android Mobile App Staging Build:** [Expo.dev](https://expo.dev/accounts/commuteai/projects/commuteai-ui/builds/3275e20a-3bc2-445c-b1fa-1de57e52b971)
 - **Our pitch:** [Commute.ai Pitch.ppt](https://helsinkifi-my.sharepoint.com/:p:/g/personal/rviljami_ad_helsinki_fi/EZPbmpZ6z7lEhy-RRhSo7HIB2yrujSE8HFqT4rCttVaHxw?e=NEaBJp)
-
----
-
-**"Beyond fastest routes"** - Making public transport personal and pleasant.
