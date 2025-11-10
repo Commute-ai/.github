@@ -32,5 +32,5 @@ Our pitch: [Commute.ai Pitch.ppt](https://helsinkifi-my.sharepoint.com/:p:/g/per
 ## Quick Links
 
 - **Hosting:** [coolify.commuteai.tech](https://coolify.commuteai.tech/)
-- **Android Mobile App Staging Build:** [Expo.dev](https://expo.dev/accounts/commuteai/projects/commuteai-ui/builds/3275e20a-3bc2-445c-b1fa-1de57e52b971)
+- **Android App (Staging v0.7.0):** [Expo.dev](https://expo.dev/accounts/commuteai/projects/commuteai-ui/builds/645c74c9-2439-4f11-bd8d-8a502e75e6e5)
 - **Our pitch:** [Commute.ai Pitch.ppt](https://helsinkifi-my.sharepoint.com/:p:/g/personal/rviljami_ad_helsinki_fi/EZPbmpZ6z7lEhy-RRhSo7HIB2yrujSE8HFqT4rCttVaHxw?e=NEaBJp)
