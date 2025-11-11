@@ -5,13 +5,18 @@ All notable changes to Commute.ai will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.7.0](https://github.com/Commute-ai/.github/releases/tag/v0.7.0) - Planned for 2025-11-11
+## [0.8.0](https://github.com/Commute-ai/.github/releases/tag/v0.8.0) - Planned for 2025-11-17
+
+### Added
+
+- [As a user I want to save my routing preferences as a set of text on a preferences page, so that the AI can consider my preferences when generating itniaries](https://github.com/Commute-ai/.github/issues/3)
+
+## [0.7.0](https://github.com/Commute-ai/.github/releases/tag/v0.7.0) - 2025-11-11
 
 ### Added
 
 - [As an user when I see the routes from A to B, each route has a one sentence description from the AI](https://github.com/Commute-ai/.github/issues/8)
 - [As an user when I click to expand a specific itinary, I will see all the legs of the itinirary and each leg will have an AI description](https://github.com/Commute-ai/.github/issues/9)
-- [As a user I want to save my routing preferences as a set of text on a preferences page, so that the AI can consider my preferences when generating itniaries](https://github.com/Commute-ai/.github/issues/3)
 
 ## [0.6.0](https://github.com/Commute-ai/.github/releases/tag/v0.6.0) - 2025-11-03
 
