@@ -6,9 +6,13 @@
 
 Commute.ai is a mobile app that enhances HSL routes with AI-powered personalization. We learn your preferences (scenic vs fast, comfort vs efficiency) and use social media insights to suggest routes that match how you actually want to travel.
 
-Our pitch: [Commute.ai Pitch.ppt](https://helsinkifi-my.sharepoint.com/:p:/g/personal/rviljami_ad_helsinki_fi/EZPbmpZ6z7lEhy-RRhSo7HIB2yrujSE8HFqT4rCttVaHxw?e=NEaBJp)
-Our demo video: [Youtube: Commute.ai - AI-Powered routing planner](https://www.youtube.com/watch?v=uqN0bPjxlgI)
-Android App (Production v1.0.0): [Google Drive - commute-ai-v1.0.0.apk](https://drive.google.com/file/d/1YR_V4BVdghWgXByHsueVeRz_506c1Y8l/view?usp=sharing)
+## Quick Links
+
+- **Hosting:** [coolify.commuteai.tech](https://coolify.commuteai.tech/)
+- **Android App (Production v1.0.0):** [Google Drive - commute-ai-v1.0.0.apk](https://drive.google.com/file/d/1YR_V4BVdghWgXByHsueVeRz_506c1Y8l/view?usp=sharing)
+- **Our pitch:** [commute.ai-pitch.pdf](./assets/commute.ai-pitch.pdf)
+- **Our technical presentation:** [commute.ai-technical.pdf](./assets/commute.ai-technical.pdf)
+- **Our demo video:** [Youtube: Commute.ai - AI-Powered routing planner](https://www.youtube.com/watch?v=uqN0bPjxlgI)
 
 ## Repositories
 
@@ -30,10 +34,3 @@ Android App (Production v1.0.0): [Google Drive - commute-ai-v1.0.0.apk](https://
 - **Discord:** [Join here](https://discord.gg/75WP9k3Xum) - Daily coordination
 - **GitHub Issues:** Technical discussion and progress
 - **Monday Meetings:** Sprint planning and retrospectives
-
-## Quick Links
-
-- **Hosting:** [coolify.commuteai.tech](https://coolify.commuteai.tech/)
-- **Android App (Production v1.0.0):** [Google Drive - commute-ai-v1.0.0.apk](https://drive.google.com/file/d/1YR_V4BVdghWgXByHsueVeRz_506c1Y8l/view?usp=sharing)
-- **Our pitch:** [Commute.ai Pitch.ppt](https://helsinkifi-my.sharepoint.com/:p:/g/personal/rviljami_ad_helsinki_fi/EZPbmpZ6z7lEhy-RRhSo7HIB2yrujSE8HFqT4rCttVaHxw?e=NEaBJp)
-- **Our demo video:** [Youtube: Commute.ai - AI-Powered routing planner](https://www.youtube.com/watch?v=uqN0bPjxlgI)
