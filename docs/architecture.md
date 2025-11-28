@@ -30,7 +30,7 @@
 2. Backend fetches HSL routes and user preferences
 3. Backend sends route context to AI agents
 4. AI agents fetch social media data and process insights
-5. AI agents return enhanced route scoring to backend
+5. AI agents returns itinerary insights to backend 
 6. Backend returns personalized routes to mobile app
 
 ## Database Strategy
@@ -40,7 +40,7 @@
 - HSL route cache
 - Authentication data
 
-**AI Agents Database:**
+**AI Agents Database (Not Implemented):**
 - Social media insights cache (12-24h TTL)
 - Route sentiment scores?
 - User preference learning patterns?
@@ -68,7 +68,7 @@
 
 **Hosting:** Coolify self-hosted platform on DigitalOcean droplet
 
-Dashboard available here: [coolify.commute.ai.ender.fi](https://coolify.commute.ai.ender.fi/)
+Dashboard available here: [coolify.commuteai.tech](https://coolify.commuteai.tech/)
 
 **CI/CD Pipeline:**
 - Push to `main` branch triggers GitHub webhook
