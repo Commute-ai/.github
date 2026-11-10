@@ -8,8 +8,8 @@ Commute.ai is a mobile app that enhances HSL routes with AI-powered personalizat
 
 ## Quick Links
 
-- **Live Demo:** [appetize.io/app](https://appetize.io/app/b_m4k5wv5w7swe3ynhwobovtn7q4)
-- **Android App (Production v1.0.0):** [Google Drive - commute-ai-v1.0.0.apk](https://drive.google.com/file/d/1YR_V4BVdghWgXByHsueVeRz_506c1Y8l/view?usp=sharing)
+- **Live Demo:** [appetize.io/app](https://appetize.io/app/b_gv5hxkzruhm24nyyjxrstsikm4)
+- **Android App (Production v1.0.0):** [Google Drive - commute-ai-v1.0.0.apk](https://drive.google.com/file/d/10tdfLgUX9NJsFgv_SA9SRkRBM_BJ-iBo/view?usp=sharing)
 - **Our pitch:** [commute.ai-pitch.pdf](https://github.com/Commute-ai/.github/blob/main/docs/assets/commute.ai-pitch.pdf)
 - **Our technical presentation:** [commute.ai-technical.pdf](https://github.com/Commute-ai/.github/blob/main/docs/assets/commute.ai-technical.pdf)
 - **Our demo video:** [Youtube: Commute.ai - AI-Powered routing planner](https://www.youtube.com/watch?v=uqN0bPjxlgI)
