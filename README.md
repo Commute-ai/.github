@@ -4,4 +4,4 @@ The .github repository contains all the documentation and non-code related files
 
 All feature/user story -issues also live in this repository.
 
-Read more about Commute.ai here: https://commuteai.tech/
+Read more about Commute.ai here: https://github.com/Commute-ai
